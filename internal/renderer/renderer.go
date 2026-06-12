@@ -308,8 +308,30 @@ func (r *Renderer) renderButton(gtx layout.Context, node *ast.Node) layout.Dimen
 		}
 	}
 
-	// Render button with optional bgColor styling
+	// Get button text size (default 16), check properties first then styles
+	btnSize := 16
+	if sizeStr, ok := node.Properties["size"]; ok {
+		if num := parseNumber(sizeStr.Raw); num > 0 {
+			btnSize = num
+		}
+	}
+	if sizeStr, ok := node.Styles["size"]; ok {
+		if num := parseNumber(sizeStr.Raw); num > 0 {
+			btnSize = num
+		}
+	}
+
+	// Render button with optional styling
 	btStyle := material.Button(r.theme, btn, text)
+	btStyle.TextSize = unit.Sp(float32(btnSize))
+
+	// Apply text color from styles if present
+	if colorProp, ok := node.Properties["textColor"]; ok {
+		btStyle.Color = GetColor(colorProp.Raw)
+	}
+	if colorProp, ok := node.Styles["textColor"]; ok {
+		btStyle.Color = GetColor(colorProp.Raw)
+	}
 
 	// Apply background color from styles if present
 	if bgColorProp, ok := node.Styles["bgColor"]; ok {

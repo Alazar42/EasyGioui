@@ -252,6 +252,8 @@ Button {
     onClick: App.OnClick
     style: {
         bgColor: "green"
+        textColor: "white"
+        size: "18"
     }
 }
 ```
@@ -261,7 +263,8 @@ Button {
 | Property | Type | Description |
 |----------|------|-------------|
 | `bgColor` | color | Button background color |
-| (Others are inherited from theme) |
+| `textColor` | color | Button text color |
+| `size` | number | Button text size in pixels |
 
 ### Example
 

@@ -21,13 +21,21 @@ Text {
 
 ### Size
 
-Font size for `Text` components.
+Font size for `Text` and `Button` components.
 
 ```
 Text {
     text: "Large Text"
     style: {
         size: "32"    // Pixels
+    }
+}
+
+Button {
+    text: "Big Button"
+    onClick: App.Handler
+    style: {
+        size: "20"
     }
 }
 ```
@@ -46,6 +54,14 @@ Text color for `Text` and `Button` components.
 ```
 Text {
     text: "Colored Text"
+    style: {
+        textColor: "white"
+    }
+}
+
+Button {
+    text: "Click Me"
+    onClick: App.Handler
     style: {
         textColor: "white"
     }
@@ -94,6 +110,34 @@ gray      - Medium gray (#808080)
 lightgray - Light gray (#C8C8C8)
 darkgray  - Dark gray (#404040)
 ```
+
+## Style Properties Reference
+
+### Supported Properties
+
+| Property | Components | Type | Example | Notes |
+|----------|-----------|------|---------|-------|
+| `size` | Text, Button | number | `"16"` | Font size in pixels |
+| `textColor` | Text, Button | color | `"white"` | Text color name |
+| `bgColor` | All | color | `"blue"` | Background color name |
+
+### Property Support by Component
+
+**Text:**
+- `size` - Font size in pixels
+- `textColor` - Text color
+- `bgColor` - Background color
+
+**Button:**
+- `size` - Button text size in pixels
+- `textColor` - Button text color
+- `bgColor` - Button background color
+
+**VBox / HBox:**
+- `bgColor` - Background color for the container
+
+**Window:**
+- `bgColor` - Window background color
 
 ## Styling Patterns
 
@@ -181,21 +225,33 @@ VBox {
     Button {
         text: "Primary"
         onClick: App.Action
-        style: { bgColor: "blue" }
+        style: { 
+            bgColor: "blue"
+            textColor: "white"
+            size: "16"
+        }
         weight: "1"
     }
     
     Button {
         text: "Success"
         onClick: App.Action
-        style: { bgColor: "green" }
+        style: { 
+            bgColor: "green"
+            textColor: "white"
+            size: "16"
+        }
         weight: "1"
     }
     
     Button {
         text: "Danger"
         onClick: App.Action
-        style: { bgColor: "red" }
+        style: { 
+            bgColor: "red"
+            textColor: "white"
+            size: "16"
+        }
         weight: "1"
     }
 }
