@@ -1,0 +1,45 @@
+Window {
+    title: "Egg Timer"
+
+    VBox {
+        Text {
+            id: counterText
+            text: "Counter: 0"
+        }
+
+        HBox {
+            VBox {
+                Text {
+                    text: "Increment Controls"
+                }
+                Button {
+                    id: incBtn
+                    text: "Increment"
+                    onClick: Counter.Increment
+                }
+            }
+
+            VBox {
+                Text {
+                    text: "Decrement Controls"
+                }
+                Button {
+                    id: decBtn
+                    text: "Decrement"
+                    onClick: Counter.Decrement
+                }
+            }
+
+            VBox {
+                Text {
+                    text: "Other Controls"
+                }
+                Button {
+                    id: btn
+                    text: "On Click"
+                    onClick: Counter.OnButtonClick
+                }
+            }
+        }
+    }
+}

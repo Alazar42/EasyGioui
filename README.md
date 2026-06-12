@@ -1,53 +1,133 @@
 # EasyGioUI
 
-EasyGioUI is a retained-style UI runtime built on top of Gio (gioui.org).
-It supports:
+EasyGioUI is a minimal declarative UI library that plugs directly into Gio applications without replacing the runtime.
 
-- Declarative `.easy` UI files
-- Go script handlers with runtime binding
-- Go-only UI construction through SDK APIs
-- Event dispatch + state mutation + reactive rerender trigger model
+## What It Is
 
-## Architecture
+- A pure library (not a framework)
+- Parses `.easy` declarative UI files once at startup
+- Renders UI into standard Gio `FrameEvent` handlers
+- No custom runtime, no engine, no app wrapper
+- Direct injection into your Gio event loop
 
-Core layers:
+## What It's Not
 
-1. UI layer (`.easy`): declarative structure tree.
-2. Script layer (`.go`): behavior, events, and state mutations.
-3. Runtime layer: retained tree + reactivity + event dispatch.
-4. Renderer: maps retained nodes to Gio widgets.
+- Not a Gio replacement
+- Not a custom event loop
+- Not an opinionated runtime architecture
+- Not auto-generated code
 
-Immediate-mode Gio is wrapped with a retained model by:
+## Core API
 
-- stable node IDs
-- runtime property map
-- event binding registry
-- tree snapshots and version bumps for diff/reconcile hooks
+Only 4 public functions:
 
-## Folder Structure
+1. **`Load(path string) *UI`** - Parse and cache `.easy` file
+2. **`Register(ops *op.Ops, gtx layout.Context, ui *UI)`** - Render in FrameEvent
+3. **`SetText(id string, value any)`** - Update text values
+4. **`Bind(app any)`** - Bind zero-arg methods to click handlers
 
-- `cmd/easygio`: CLI entry
-- `internal/ast`: AST types
-- `internal/parser`: lexer + parser for `.easy`
-- `internal/loader`: unified app loader
-- `internal/runtime`: retained tree + runtime context
-- `internal/binder`: `.easy` to Go handler binder
-- `internal/events`: event dispatcher
-- `internal/state`: global + scoped state store
-- `internal/reactivity`: dependency graph and subscriptions
-- `internal/scripts`: script loading modes
-- `internal/renderer`: Gio mapping layer
-- `internal/layouts`: layout wrappers
-- `internal/widgets`: widget abstraction points
-- `internal/hotreload`: polling hot reload loop
-- `internal/devtools`: doctor command checks
-- `sdk/easygio`: Go-first builder API
-- `examples/counter`: mixed and Go-only usage seed
+## Usage Pattern
 
-## CLI
+You write normal Gio code:
 
-- `easygio run -app .`
-- `easygio dev -app .`
+```go
+var ui = easygioui.Load("app/ui.easy")
+
+func main() {
+    go func() {
+        w := new(app.Window)
+        w.Option(app.Title("My App"))
+        
+        var ops op.Ops
+        for {
+            evt := w.Event()
+            
+            if e, ok := evt.(app.FrameEvent); ok {
+                gtx := layout.Context{
+                    Ops: &ops,
+                    Now: e.Now,
+                    Metric: e.Metric,
+                    Source: e.Source,
+                }
+                gtx.Constraints = layout.Exact(e.Size)
+                
+                easygioui.Register(&ops, gtx, ui)
+                e.Frame(&ops)
+            }
+        }
+    }()
+    
+    app.Main()
+}
+```
+
+## Supported UI Elements
+
+**.easy files support:**
+- `Window` (root container, logical only)
+- `VBox`, `HBox` (flex layouts)
+- `Text` (labels)
+- `Button` (click handlers)
+
+Example:
+
+```
+Window {
+    title: "Counter"
+    
+    VBox {
+        Text {
+            id: counter
+            text: "Count: 0"
+        }
+        
+        Button {
+            text: "Increment"
+            onClick: App.Increment
+        }
+    }
+}
+```
+
+## Binding Handlers
+
+```go
+type App struct {
+    count int
+}
+
+func (a *App) Increment() {
+    a.count++
+    easygioui.SetText("counter", fmt.Sprintf("Count: %d", a.count))
+}
+
+easygioui.Bind(&App{})
+```
+
+## How It Works
+
+1. **Load Phase**: Parse `.easy` file once, build AST, cache in memory
+2. **Per-Frame Phase**: 
+   - Traverse cached AST
+   - Convert nodes to Gio widgets
+   - Handle button clicks
+   - Apply `SetText` overrides
+   - Render to `gtx.Ops`
+3. **Update Phase**: Call methods on bound app, update text state
+
+## Performance
+
+- Single parse (no per-frame overhead)
+- Cached AST reuse
+- Minimal allocations in hot path
+- Reflection only during setup
+- Widget state cached between frames
+
+## See Also
+
+- [LIBRARY_API.md](LIBRARY_API.md) - Full API documentation
+- [examples/counter](examples/counter) - Working example
+
 - `easygio build -app . -o easygio-app`
 - `easygio create -name myapp`
 - `easygio doctor`
