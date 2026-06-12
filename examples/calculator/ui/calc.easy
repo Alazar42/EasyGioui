@@ -2,15 +2,30 @@
 
 Window {
     VBox {
+        style: {
+            bgColor: "darkgray"
+        }
+        Text {
+            text: "Calculator"
+            style: {
+                size: "32"
+                textColor: "white"
+            }
+        }
         Text {
             id: display
             text: "0"
             style: {
-                size: "24"
+                size: "28"
+                textColor: "white"
+                bgColor: "black"
             }
         }
         HBox {
             VBox {
+                style: {
+                    bgColor: "gray"
+                }
                 HBox {
                     Btn7 {}
                     Btn8 {}
@@ -37,10 +52,29 @@ Window {
                 }
             }
             VBox {
-                BtnDiv {}
-                BtnMul {}
-                BtnSub {}
-                BtnAdd {}
+                style: {
+                    bgColor: "orange"
+                }
+                BtnDiv {
+                    style: {
+                        bgColor: "orange"
+                    }
+                }
+                BtnMul {
+                    style: {
+                        bgColor: "orange"
+                    }
+                }
+                BtnSub {
+                    style: {
+                        bgColor: "orange"
+                    }
+                }
+                BtnAdd {
+                    style: {
+                        bgColor: "orange"
+                    }
+                }
                 BtnEqual {
                     style: {
                         bgColor: "green"

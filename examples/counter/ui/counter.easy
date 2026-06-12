@@ -4,40 +4,64 @@ Window {
     title: "Egg Timer"
 
     VBox {
+        style: {
+            bgColor: "lightgray"
+        }
+        Text {
+            text: "Counter Application"
+            style: {
+                size: "28"
+                textColor: "darkgray"
+            }
+        }
         Text {
             id: counterText
             text: "Counter: 0"
             style: {
-                size: "20"
+                size: "24"
+                textColor: "white"
+                bgColor: "black"
             }
         }
 
         HBox {
             VBox {
+                style: {
+                    bgColor: "green"
+                }
                 Text {
-                    text: "Increment Controls"
+                    text: "➕ Increment"
                     style: {
-                        textColor: "green"
+                        size: "16"
+                        textColor: "white"
                     }
                 }
                 IncButton {}
             }
 
             VBox {
+                style: {
+                    bgColor: "red"
+                }
                 Text {
-                    text: "Decrement Controls"
+                    text: "➖ Decrement"
                     style: {
-                        textColor: "red"
+                        size: "16"
+                        textColor: "white"
                     }
                 }
                 DecButton {}
             }
 
             VBox {
+                style: {
+                    bgColor: "blue"
+                }
                 Text {
-                    text: "Other Controls"
+                    text: "🔄 Custom"
                     style: {
-                        textColor: "blue"
+                        size: "16"
+                        textColor: "white"
                     }
                 }
                 CustomButton {}
