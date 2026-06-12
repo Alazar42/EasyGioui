@@ -9,7 +9,6 @@ Window {
             text: "Counter: 0"
             style: {
                 size: "20"
-                textColor: "blue"
             }
         }
 
@@ -38,7 +37,7 @@ Window {
                 Text {
                     text: "Other Controls"
                     style: {
-                        textColor: "yellow"
+                        textColor: "blue"
                     }
                 }
                 CustomButton {}

@@ -7,7 +7,6 @@ Window {
             text: "0"
             style: {
                 size: "24"
-                textColor: "white"
             }
         }
         HBox {
@@ -32,7 +31,7 @@ Window {
                     Btn0 {}
                     BtnClear {
                         style: {
-                            textColor: "red"
+                            bgColor: "red"
                         }
                     }
                 }
@@ -44,7 +43,7 @@ Window {
                 BtnAdd {}
                 BtnEqual {
                     style: {
-                        textColor: "green"
+                        bgColor: "green"
                     }
                 }
             }
