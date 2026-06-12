@@ -7,12 +7,19 @@ Window {
         Text {
             id: counterText
             text: "Counter: 0"
+            style: {
+                size: 20
+                textColor: blue
+            }
         }
 
         HBox {
             VBox {
                 Text {
                     text: "Increment Controls"
+                    style: {
+                        textColor: green
+                    }
                 }
                 IncButton {}
             }
@@ -20,6 +27,9 @@ Window {
             VBox {
                 Text {
                     text: "Decrement Controls"
+                    style: {
+                        textColor: red
+                    }
                 }
                 DecButton {}
             }
@@ -27,6 +37,9 @@ Window {
             VBox {
                 Text {
                     text: "Other Controls"
+                    style: {
+                        textColor: yellow
+                    }
                 }
                 CustomButton {}
             }

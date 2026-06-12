@@ -9,6 +9,7 @@ type Node struct {
 	Type       string
 	ID         string
 	Properties map[string]*Value
+	Styles     map[string]*Value // Optional styling properties
 	Children   []*Node
 }
 

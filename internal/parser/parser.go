@@ -119,7 +119,7 @@ func (p *Parser) parseNode() (*ast.Node, error) {
 	if p.cur.kind != tokIdent {
 		return nil, fmt.Errorf("expected node type at %d", p.cur.pos)
 	}
-	n := &ast.Node{Type: p.cur.lit, Properties: map[string]*ast.Value{}}
+	n := &ast.Node{Type: p.cur.lit, Properties: map[string]*ast.Value{}, Styles: make(map[string]*ast.Value)}
 	if err := p.bump(); err != nil {
 		return nil, err
 	}
@@ -135,8 +135,23 @@ func (p *Parser) parseNode() (*ast.Node, error) {
 			return nil, err
 		}
 
+		// Special handling for style: { ... }
+		if name == "style" && p.cur.kind == tokColon {
+			if err := p.bump(); err != nil { // consume ':'
+				return nil, err
+			}
+			if p.cur.kind != tokLBrace {
+				return nil, fmt.Errorf("expected { after style: at %d", p.cur.pos)
+			}
+			// Parse style properties
+			if err := p.parseStyles(n); err != nil {
+				return nil, err
+			}
+			continue
+		}
+
 		if p.cur.kind == tokLBrace {
-			child := &ast.Node{Type: name, Properties: map[string]*ast.Value{}}
+			child := &ast.Node{Type: name, Properties: map[string]*ast.Value{}, Styles: make(map[string]*ast.Value)}
 			if err := p.parseNodeBody(child); err != nil {
 				return nil, err
 			}
@@ -166,6 +181,9 @@ func (p *Parser) parseNodeBody(n *ast.Node) error {
 	if err := p.expect(tokLBrace); err != nil {
 		return err
 	}
+	if n.Styles == nil {
+		n.Styles = make(map[string]*ast.Value)
+	}
 	for p.cur.kind != tokRBrace && p.cur.kind != tokEOF {
 		if p.cur.kind != tokIdent {
 			return fmt.Errorf("expected property or child at %d", p.cur.pos)
@@ -174,8 +192,24 @@ func (p *Parser) parseNodeBody(n *ast.Node) error {
 		if err := p.bump(); err != nil {
 			return err
 		}
+
+		// Special handling for style: { ... }
+		if name == "style" && p.cur.kind == tokColon {
+			if err := p.bump(); err != nil { // consume ':'
+				return err
+			}
+			if p.cur.kind != tokLBrace {
+				return fmt.Errorf("expected { after style: at %d", p.cur.pos)
+			}
+			// Parse style properties
+			if err := p.parseStyles(n); err != nil {
+				return err
+			}
+			continue
+		}
+
 		if p.cur.kind == tokLBrace {
-			child := &ast.Node{Type: name, Properties: map[string]*ast.Value{}}
+			child := &ast.Node{Type: name, Properties: map[string]*ast.Value{}, Styles: make(map[string]*ast.Value)}
 			if err := p.parseNodeBody(child); err != nil {
 				return err
 			}
@@ -226,6 +260,31 @@ func (p *Parser) parseValue() (*ast.Value, error) {
 	default:
 		return nil, fmt.Errorf("unexpected value token at %d", p.cur.pos)
 	}
+}
+
+// parseStyles parses style: { key: value, key: value, ... }
+func (p *Parser) parseStyles(n *ast.Node) error {
+	if err := p.expect(tokLBrace); err != nil {
+		return err
+	}
+	for p.cur.kind != tokRBrace && p.cur.kind != tokEOF {
+		if p.cur.kind != tokIdent {
+			return fmt.Errorf("expected style property at %d", p.cur.pos)
+		}
+		key := p.cur.lit
+		if err := p.bump(); err != nil {
+			return err
+		}
+		if err := p.expect(tokColon); err != nil {
+			return err
+		}
+		val, err := p.parseValue()
+		if err != nil {
+			return err
+		}
+		n.Styles[key] = val
+	}
+	return p.expect(tokRBrace)
 }
 
 func (p *Parser) expect(kind tokenKind) error {

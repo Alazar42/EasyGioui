@@ -5,6 +5,10 @@ Window {
         Text {
             id: display
             text: "0"
+            style: {
+                size: 24
+                textColor: white
+            }
         }
         HBox {
             VBox {
@@ -26,7 +30,11 @@ Window {
                 HBox {
                     BtnDecimal {}
                     Btn0 {}
-                    BtnClear {}
+                    BtnClear {
+                        style: {
+                            textColor: red
+                        }
+                    }
                 }
             }
             VBox {
@@ -34,7 +42,11 @@ Window {
                 BtnMul {}
                 BtnSub {}
                 BtnAdd {}
-                BtnEqual {}
+                BtnEqual {
+                    style: {
+                        textColor: green
+                    }
+                }
             }
         }
     }

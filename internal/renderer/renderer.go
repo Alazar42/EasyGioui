@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"image/color"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"easygioui/internal/ast"
 
 	"gioui.org/layout"
 	"gioui.org/op"
+	"gioui.org/unit"
 	"gioui.org/widget"
 	"gioui.org/widget/material"
 )
@@ -132,7 +134,29 @@ func (r *Renderer) renderText(gtx layout.Context, node *ast.Node) layout.Dimensi
 	// Get text value from state or properties
 	text := r.getText(node)
 
-	label := material.Label(r.theme, 16, text)
+	// Get text size (default 16), check properties first then styles
+	size := 16
+	if sizeStr, ok := node.Properties["size"]; ok {
+		if num := parseNumber(sizeStr.Raw); num > 0 {
+			size = num
+		}
+	}
+	if sizeStr, ok := node.Styles["size"]; ok {
+		if num := parseNumber(sizeStr.Raw); num > 0 {
+			size = num
+		}
+	}
+
+	label := material.Label(r.theme, unit.Sp(float32(size)), text)
+
+	// Apply custom text color if specified, check properties first then styles
+	if colorProp, ok := node.Properties["textColor"]; ok {
+		label.Color = GetColor(colorProp.Raw)
+	}
+	if colorProp, ok := node.Styles["textColor"]; ok {
+		label.Color = GetColor(colorProp.Raw)
+	}
+
 	return label.Layout(gtx)
 }
 
@@ -174,8 +198,15 @@ func (r *Renderer) renderButton(gtx layout.Context, node *ast.Node) layout.Dimen
 		}
 	}
 
-	// Render button
-	return material.Button(r.theme, btn, text).Layout(gtx)
+	// Render button with optional styling
+	btStyle := material.Button(r.theme, btn, text)
+
+	// Apply text color from styles
+	if colorProp, ok := node.Styles["textColor"]; ok {
+		btStyle.Color = GetColor(colorProp.Raw)
+	}
+
+	return btStyle.Layout(gtx)
 }
 
 // processEvents executes any queued events.
@@ -232,4 +263,10 @@ func GetColor(s string) color.NRGBA {
 	default:
 		return color.NRGBA{R: 200, G: 200, B: 200, A: 255}
 	}
+}
+
+// parseNumber tries to parse a string as an integer.
+func parseNumber(s string) int {
+	n, _ := strconv.Atoi(strings.TrimSpace(s))
+	return n
 }
