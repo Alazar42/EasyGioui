@@ -17,6 +17,9 @@
 
 @component Btn2 {
     Button {
+        style : {
+            bgColor: "red"
+        }
         id: btn2
         text: "2"
         onClick: Calculator.Digit2
