@@ -232,7 +232,7 @@ func (r *Renderer) renderHBox(gtx layout.Context, node *ast.Node) layout.Dimensi
 	return flex.Layout(gtx, children...)
 }
 
-// renderText renders a text label.
+// renderText renders a text label with optional alignment.
 func (r *Renderer) renderText(gtx layout.Context, node *ast.Node) layout.Dimensions {
 	// Get text value from state or properties
 	text := r.getText(node)
@@ -267,7 +267,42 @@ func (r *Renderer) renderText(gtx layout.Context, node *ast.Node) layout.Dimensi
 		paint.FillShape(gtx.Ops, c, shp.Op())
 	}
 
-	return label.Layout(gtx)
+	// Get horizontal alignment (default: start/left)
+	hAlignDir := layout.Middle
+	if hAlignStr, ok := node.Styles["hAlign"]; ok {
+		switch strings.ToLower(hAlignStr.Raw) {
+		case "center":
+			hAlignDir = layout.Middle
+		case "end", "right":
+			hAlignDir = layout.End
+		case "start", "left":
+			hAlignDir = layout.Start
+		}
+	}
+
+	// Get vertical alignment (default: start/top)
+	vAlignDir := layout.Start
+	if vAlignStr, ok := node.Styles["vAlign"]; ok {
+		switch strings.ToLower(vAlignStr.Raw) {
+		case "center":
+			vAlignDir = layout.Middle
+		case "end", "bottom":
+			vAlignDir = layout.End
+		case "start", "top":
+			vAlignDir = layout.Start
+		}
+	}
+
+	// Apply alignment using Flex layout
+	return layout.Flex{Axis: layout.Vertical, Alignment: vAlignDir}.Layout(gtx,
+		layout.Flexed(1, func(gtx layout.Context) layout.Dimensions {
+			return layout.Flex{Axis: layout.Horizontal, Alignment: hAlignDir}.Layout(gtx,
+				layout.Flexed(1, func(gtx layout.Context) layout.Dimensions {
+					return label.Layout(gtx)
+				}),
+			)
+		}),
+	)
 }
 
 // getText retrieves the text for a node, preferring state override.

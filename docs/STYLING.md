@@ -68,6 +68,39 @@ Button {
 }
 ```
 
+### Text Alignment
+
+Control horizontal and vertical positioning of text within its container.
+
+**Horizontal Alignment (`hAlign`):**
+- `left` or `start` - Align text to the left (default)
+- `center` - Center text horizontally  
+- `right` or `end` - Align text to the right
+
+**Vertical Alignment (`vAlign`):**
+- `top` or `start` - Align text to the top (default)
+- `center` - Center text vertically
+- `bottom` or `end` - Align text to the bottom
+
+```
+Text {
+    text: "Right-Bottom"
+    style: {
+        hAlign: "right"
+        vAlign: "bottom"
+        size: "24"
+    }
+}
+
+Text {
+    text: "Centered"
+    style: {
+        hAlign: "center"
+        vAlign: "center"
+    }
+}
+```
+
 ### Background Color (`bgColor`)
 
 Background color for any component.
@@ -120,6 +153,8 @@ darkgray  - Dark gray (#404040)
 | `size` | Text, Button | number | `"16"` | Font size in pixels |
 | `textColor` | Text, Button | color | `"white"` | Text color name |
 | `bgColor` | All | color | `"blue"` | Background color name |
+| `hAlign` | Text, Button | string | `"right"` | Horizontal alignment: left/center/right |
+| `vAlign` | Text, Button | string | `"bottom"` | Vertical alignment: top/center/bottom |
 
 ### Property Support by Component
 
@@ -127,11 +162,15 @@ darkgray  - Dark gray (#404040)
 - `size` - Font size in pixels
 - `textColor` - Text color
 - `bgColor` - Background color
+- `hAlign` - Horizontal alignment (left/center/right)
+- `vAlign` - Vertical alignment (top/center/bottom)
 
 **Button:**
 - `size` - Button text size in pixels
 - `textColor` - Button text color
 - `bgColor` - Button background color
+- `hAlign` - Horizontal alignment (left/center/right)
+- `vAlign` - Vertical alignment (top/center/bottom)
 
 **VBox / HBox:**
 - `bgColor` - Background color for the container

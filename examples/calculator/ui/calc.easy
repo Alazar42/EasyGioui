@@ -2,17 +2,6 @@
 
 Window {
     VBox {
-        style: {
-            bgColor: "black"
-        }
-        spacing: "8"
-        Text {
-            text: "Calculator"
-            style: {
-                size: "32"
-                textColor: "white"
-            }
-        }
         Text {
             id: display
             text: "0"
@@ -21,6 +10,8 @@ Window {
                 size: "28"
                 textColor: "white"
                 bgColor: "darkgray"
+                hAlign: "right"
+                vAlign: "bottom"
             }
         }
         HBox {
