@@ -112,16 +112,58 @@ func (r *Renderer) renderVBox(gtx layout.Context, node *ast.Node) layout.Dimensi
 		paint.FillShape(gtx.Ops, c, shp.Op())
 	}
 
+	// Get spacing between children (default 4)
+	spacing := 4
+	if spacingStr, ok := node.Properties["spacing"]; ok {
+		if num := parseNumber(spacingStr.Raw); num >= 0 {
+			spacing = num
+		}
+	}
+	if spacingStr, ok := node.Styles["spacing"]; ok {
+		if num := parseNumber(spacingStr.Raw); num >= 0 {
+			spacing = num
+		}
+	}
+
 	// Create FlexChild items for each child
 	children := make([]layout.FlexChild, len(node.Children))
 	for i, child := range node.Children {
 		child := child // capture for closure
-		children[i] = layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-			return r.renderNode(gtx, child)
-		})
+		// Check if child has a weight property (flex weight)
+		weight := float32(0)
+		if w, ok := child.Properties["weight"]; ok {
+			if f, err := strconv.ParseFloat(strings.TrimSpace(w.Raw), 32); err == nil {
+				weight = float32(f)
+			}
+		}
+		if w, ok := child.Styles["weight"]; ok {
+			if f, err := strconv.ParseFloat(strings.TrimSpace(w.Raw), 32); err == nil {
+				weight = float32(f)
+			}
+		}
+
+		if weight > 0 {
+			children[i] = layout.Flexed(weight, func(gtx layout.Context) layout.Dimensions {
+				return r.renderNode(gtx, child)
+			})
+		} else {
+			children[i] = layout.Rigid(func(gtx layout.Context) layout.Dimensions {
+				return r.renderNode(gtx, child)
+			})
+		}
 	}
 
-	flex := layout.Flex{Axis: layout.Vertical}
+	flex := layout.Flex{
+		Axis:      layout.Vertical,
+		Spacing:   layout.SpaceStart,
+		Alignment: layout.Middle,
+	}
+
+	// If spacing is specified, wrap it
+	if spacing > 0 {
+		flex.Spacing = layout.Spacing(unit.Dp(float32(spacing)))
+	}
+
 	return flex.Layout(gtx, children...)
 }
 
@@ -135,16 +177,58 @@ func (r *Renderer) renderHBox(gtx layout.Context, node *ast.Node) layout.Dimensi
 		paint.FillShape(gtx.Ops, c, shp.Op())
 	}
 
+	// Get spacing between children (default 4)
+	spacing := 4
+	if spacingStr, ok := node.Properties["spacing"]; ok {
+		if num := parseNumber(spacingStr.Raw); num >= 0 {
+			spacing = num
+		}
+	}
+	if spacingStr, ok := node.Styles["spacing"]; ok {
+		if num := parseNumber(spacingStr.Raw); num >= 0 {
+			spacing = num
+		}
+	}
+
 	// Create FlexChild items for each child
 	children := make([]layout.FlexChild, len(node.Children))
 	for i, child := range node.Children {
 		child := child // capture for closure
-		children[i] = layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-			return r.renderNode(gtx, child)
-		})
+		// Check if child has a weight property (flex weight)
+		weight := float32(0)
+		if w, ok := child.Properties["weight"]; ok {
+			if f, err := strconv.ParseFloat(strings.TrimSpace(w.Raw), 32); err == nil {
+				weight = float32(f)
+			}
+		}
+		if w, ok := child.Styles["weight"]; ok {
+			if f, err := strconv.ParseFloat(strings.TrimSpace(w.Raw), 32); err == nil {
+				weight = float32(f)
+			}
+		}
+
+		if weight > 0 {
+			children[i] = layout.Flexed(weight, func(gtx layout.Context) layout.Dimensions {
+				return r.renderNode(gtx, child)
+			})
+		} else {
+			children[i] = layout.Rigid(func(gtx layout.Context) layout.Dimensions {
+				return r.renderNode(gtx, child)
+			})
+		}
 	}
 
-	flex := layout.Flex{Axis: layout.Horizontal}
+	flex := layout.Flex{
+		Axis:      layout.Horizontal,
+		Spacing:   layout.SpaceStart,
+		Alignment: layout.Middle,
+	}
+
+	// If spacing is specified, wrap it
+	if spacing > 0 {
+		flex.Spacing = layout.Spacing(unit.Dp(float32(spacing)))
+	}
+
 	return flex.Layout(gtx, children...)
 }
 
