@@ -1,0 +1,14 @@
+Window {
+    title: "EasyGioUI Counter"
+    VBox {
+        Text {
+            id: titleText
+            value: "Counter: 0"
+        }
+        Button {
+            id: incBtn
+            text: "Increment"
+            onClick: App.OnClick
+        }
+    }
+}
