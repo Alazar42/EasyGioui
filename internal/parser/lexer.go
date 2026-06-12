@@ -72,6 +72,12 @@ func (l *lexer) skipSpace() {
 			}
 			continue
 		}
+		if ch == '/' && l.pos+1 < len(l.src) && l.src[l.pos+1] == '/' {
+			for l.pos < len(l.src) && l.src[l.pos] != '\n' {
+				l.pos++
+			}
+			continue
+		}
 		if !unicode.IsSpace(ch) {
 			return
 		}

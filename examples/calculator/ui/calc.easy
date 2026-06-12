@@ -1,0 +1,41 @@
+@import "calculator.easy"
+
+Window {
+    VBox {
+        Text {
+            id: display
+            text: "0"
+        }
+        HBox {
+            VBox {
+                HBox {
+                    Btn7 {}
+                    Btn8 {}
+                    Btn9 {}
+                }
+                HBox {
+                    Btn4 {}
+                    Btn5 {}
+                    Btn6 {}
+                }
+                HBox {
+                    Btn1 {}
+                    Btn2 {}
+                    Btn3 {}
+                }
+                HBox {
+                    BtnDecimal {}
+                    Btn0 {}
+                    BtnClear {}
+                }
+            }
+            VBox {
+                BtnDiv {}
+                BtnMul {}
+                BtnSub {}
+                BtnAdd {}
+                BtnEqual {}
+            }
+        }
+    }
+}

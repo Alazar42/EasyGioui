@@ -1,0 +1,137 @@
+// Number button components
+@component Btn0 {
+    Button {
+        id: btn0
+        text: "0"
+        onClick: Calculator.Digit0
+    }
+}
+
+@component Btn1 {
+    Button {
+        id: btn1
+        text: "1"
+        onClick: Calculator.Digit1
+    }
+}
+
+@component Btn2 {
+    Button {
+        id: btn2
+        text: "2"
+        onClick: Calculator.Digit2
+    }
+}
+
+@component Btn3 {
+    Button {
+        id: btn3
+        text: "3"
+        onClick: Calculator.Digit3
+    }
+}
+
+@component Btn4 {
+    Button {
+        id: btn4
+        text: "4"
+        onClick: Calculator.Digit4
+    }
+}
+
+@component Btn5 {
+    Button {
+        id: btn5
+        text: "5"
+        onClick: Calculator.Digit5
+    }
+}
+
+@component Btn6 {
+    Button {
+        id: btn6
+        text: "6"
+        onClick: Calculator.Digit6
+    }
+}
+
+@component Btn7 {
+    Button {
+        id: btn7
+        text: "7"
+        onClick: Calculator.Digit7
+    }
+}
+
+@component Btn8 {
+    Button {
+        id: btn8
+        text: "8"
+        onClick: Calculator.Digit8
+    }
+}
+
+@component Btn9 {
+    Button {
+        id: btn9
+        text: "9"
+        onClick: Calculator.Digit9
+    }
+}
+
+// Operation button components
+@component BtnAdd {
+    Button {
+        id: btnAdd
+        text: "+"
+        onClick: Calculator.OpAdd
+    }
+}
+
+@component BtnSub {
+    Button {
+        id: btnSub
+        text: "-"
+        onClick: Calculator.OpSub
+    }
+}
+
+@component BtnMul {
+    Button {
+        id: btnMul
+        text: "*"
+        onClick: Calculator.OpMul
+    }
+}
+
+@component BtnDiv {
+    Button {
+        id: btnDiv
+        text: "/"
+        onClick: Calculator.OpDiv
+    }
+}
+
+@component BtnEqual {
+    Button {
+        id: btnEqual
+        text: "="
+        onClick: Calculator.Equal
+    }
+}
+
+@component BtnClear {
+    Button {
+        id: btnClear
+        text: "C"
+        onClick: Calculator.Clear
+    }
+}
+
+@component BtnDecimal {
+    Button {
+        id: btnDec
+        text: "."
+        onClick: Calculator.Decimal
+    }
+}
