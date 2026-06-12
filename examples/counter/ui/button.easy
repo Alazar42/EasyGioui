@@ -3,9 +3,6 @@
         id: incBtn
         text: "Increment"
         onClick: Counter.Increment
-        style: {
-            textColor: "green"
-        }
     }
 }
 
@@ -14,9 +11,6 @@
         id: decBtn
         text: "Decrement"
         onClick: Counter.Decrement
-        style: {
-            textColor: "red"
-        }
     }
 }
 
@@ -25,8 +19,5 @@
         id: customBtn
         text: "Click Me"
         onClick: Counter.OnButtonClick
-        style: {
-            textColor: "purple"
-        }
     }
 }

@@ -4,9 +4,6 @@
         id: btn0
         text: "0"
         onClick: Calculator.Digit0
-        style: {
-            textColor: "blue"
-        }
     }
 }
 
@@ -15,9 +12,6 @@
         id: btn1
         text: "1"
         onClick: Calculator.Digit1
-        style: {
-            textColor: "blue"
-        }
     }
 }
 
@@ -26,9 +20,6 @@
         id: btn2
         text: "2"
         onClick: Calculator.Digit2
-        style: {
-            textColor: "blue"
-        }
     }
 }
 
@@ -37,9 +28,6 @@
         id: btn3
         text: "3"
         onClick: Calculator.Digit3
-        style: {
-            textColor: "blue"
-        }
     }
 }
 
@@ -48,9 +36,6 @@
         id: btn4
         text: "4"
         onClick: Calculator.Digit4
-        style: {
-            textColor: "blue"
-        }
     }
 }
 
@@ -59,9 +44,6 @@
         id: btn5
         text: "5"
         onClick: Calculator.Digit5
-        style: {
-            textColor: "blue"
-        }
     }
 }
 
@@ -70,9 +52,6 @@
         id: btn6
         text: "6"
         onClick: Calculator.Digit6
-        style: {
-            textColor: "blue"
-        }
     }
 }
 
@@ -81,9 +60,6 @@
         id: btn7
         text: "7"
         onClick: Calculator.Digit7
-        style: {
-            textColor: "blue"
-        }
     }
 }
 
@@ -92,9 +68,6 @@
         id: btn8
         text: "8"
         onClick: Calculator.Digit8
-        style: {
-            textColor: "blue"
-        }
     }
 }
 
@@ -103,9 +76,6 @@
         id: btn9
         text: "9"
         onClick: Calculator.Digit9
-        style: {
-            textColor: "blue"
-        }
     }
 }
 
@@ -115,9 +85,6 @@
         id: btnAdd
         text: "+"
         onClick: Calculator.OpAdd
-        style: {
-            textColor: "orange"
-        }
     }
 }
 
@@ -126,9 +93,6 @@
         id: btnSub
         text: "-"
         onClick: Calculator.OpSub
-        style: {
-            textColor: "orange"
-        }
     }
 }
 
@@ -137,9 +101,6 @@
         id: btnMul
         text: "*"
         onClick: Calculator.OpMul
-        style: {
-            textColor: "orange"
-        }
     }
 }
 
@@ -148,9 +109,6 @@
         id: btnDiv
         text: "/"
         onClick: Calculator.OpDiv
-        style: {
-            textColor: "orange"
-        }
     }
 }
 
@@ -175,8 +133,5 @@
         id: btnDec
         text: "."
         onClick: Calculator.Decimal
-        style: {
-            textColor: "gray"
-        }
     }
 }
