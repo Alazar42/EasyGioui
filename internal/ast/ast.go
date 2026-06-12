@@ -1,7 +1,8 @@
 package ast
 
 type File struct {
-	Nodes []*Node
+	Components map[string]*Node // Named components/templates
+	Nodes      []*Node
 }
 
 type Node struct {

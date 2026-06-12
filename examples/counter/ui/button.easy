@@ -1,5 +1,23 @@
-Button {
-    id: buttonId
-    text: "Button Text"
-    onClick: Counter.OnButtonClick
+@component IncButton {
+    Button {
+        id: incBtn
+        text: "Increment"
+        onClick: Counter.Increment
+    }
+}
+
+@component DecButton {
+    Button {
+        id: decBtn
+        text: "Decrement"
+        onClick: Counter.Decrement
+    }
+}
+
+@component CustomButton {
+    Button {
+        id: customBtn
+        text: "Click Me"
+        onClick: Counter.OnButtonClick
+    }
 }

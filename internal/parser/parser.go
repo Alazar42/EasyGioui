@@ -20,7 +20,10 @@ func Parse(src string) (*ast.File, error) {
 	if err := p.bump(); err != nil {
 		return nil, err
 	}
-	file := &ast.File{}
+	file := &ast.File{
+		Components: make(map[string]*ast.Node),
+		Nodes:      make([]*ast.Node, 0),
+	}
 	for p.cur.kind != tokEOF {
 		n, err := p.parseNode()
 		if err != nil {
@@ -31,40 +34,75 @@ func Parse(src string) (*ast.File, error) {
 	return file, nil
 }
 
-// ParseWithDir parses a source string and resolves relative @include directives from baseDir.
+// ParseWithDir parses a source string and resolves relative @import directives from baseDir.
 func ParseWithDir(src string, baseDir string) (*ast.File, error) {
 	p := &Parser{lx: newLexer(src), baseDir: baseDir}
 	if err := p.bump(); err != nil {
 		return nil, err
 	}
-	file := &ast.File{}
+	file := &ast.File{
+		Components: make(map[string]*ast.Node),
+		Nodes:      make([]*ast.Node, 0),
+	}
 	for p.cur.kind != tokEOF {
-		// Check for include directive (include "filename")
-		if p.cur.lit == "include" && p.cur.kind == tokIdent {
-			if err := p.bump(); err != nil { // consume "include"
+		// Check for @import directive (@import "filename")
+		if p.cur.lit == "@import" && p.cur.kind == tokIdent {
+			if err := p.bump(); err != nil { // consume "@import"
 				return nil, err
 			}
 			if p.cur.kind != tokString {
-				return nil, fmt.Errorf("expected string after include at %d", p.cur.pos)
+				return nil, fmt.Errorf("expected string after @import at %d", p.cur.pos)
 			}
-			includePath := p.cur.lit
+			importPath := p.cur.lit
 			if err := p.bump(); err != nil {
 				return nil, err
 			}
 
-			// Load the included file
-			fullPath := filepath.Join(baseDir, includePath)
+			// Load the imported file
+			fullPath := filepath.Join(baseDir, importPath)
 			data, err := os.ReadFile(fullPath)
 			if err != nil {
-				return nil, fmt.Errorf("failed to read include %q: %w", includePath, err)
+				return nil, fmt.Errorf("failed to read @import %q: %w", importPath, err)
 			}
 
-			// Parse included file recursively
-			incFile, err := ParseWithDir(string(data), filepath.Dir(fullPath))
+			// Parse imported file recursively
+			impFile, err := ParseWithDir(string(data), filepath.Dir(fullPath))
 			if err != nil {
-				return nil, fmt.Errorf("failed to parse include %q: %w", includePath, err)
+				return nil, fmt.Errorf("failed to parse @import %q: %w", importPath, err)
 			}
-			file.Nodes = append(file.Nodes, incFile.Nodes...)
+
+			// Merge components from imported file
+			for name, comp := range impFile.Components {
+				file.Components[name] = comp
+			}
+			continue
+		}
+
+		// Check for component definition (@component Name { ... })
+		if p.cur.lit == "@component" && p.cur.kind == tokIdent {
+			if err := p.bump(); err != nil { // consume "@component"
+				return nil, err
+			}
+			if p.cur.kind != tokIdent {
+				return nil, fmt.Errorf("expected component name at %d", p.cur.pos)
+			}
+			compName := p.cur.lit
+			if err := p.bump(); err != nil {
+				return nil, err
+			}
+			if p.cur.kind != tokLBrace {
+				return nil, fmt.Errorf("expected { after component name at %d", p.cur.pos)
+			}
+
+			// Parse the component body
+			comp := &ast.Node{Type: "Component", ID: compName, Properties: make(map[string]*ast.Value)}
+			if err := p.parseNodeBody(comp); err != nil {
+				return nil, err
+			}
+			// Store the first child as the actual component
+			if len(comp.Children) > 0 {
+				file.Components[compName] = comp.Children[0]
+			}
 			continue
 		}
 

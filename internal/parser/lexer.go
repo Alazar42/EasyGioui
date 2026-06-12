@@ -83,7 +83,7 @@ func (l *lexer) readIdent() token {
 	start := l.pos
 	for l.pos < len(l.src) {
 		ch := l.src[l.pos]
-		if !(unicode.IsLetter(ch) || unicode.IsDigit(ch) || ch == '_' || ch == '-') {
+		if !(unicode.IsLetter(ch) || unicode.IsDigit(ch) || ch == '_' || ch == '-' || ch == '@') {
 			break
 		}
 		l.pos++
@@ -121,5 +121,5 @@ func (l *lexer) readString() (token, error) {
 }
 
 func isIdentStart(ch rune) bool {
-	return unicode.IsLetter(ch) || ch == '_'
+	return unicode.IsLetter(ch) || ch == '_' || ch == '@'
 }

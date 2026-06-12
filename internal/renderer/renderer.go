@@ -20,6 +20,7 @@ type Renderer struct {
 	theme       *material.Theme
 	stateBuffer map[string]string
 	bindings    map[string]interface{}
+	components  map[string]*ast.Node
 	eventQueue  []Event
 }
 
@@ -47,6 +48,7 @@ func (r *Renderer) Render(ops *op.Ops, gtx layout.Context, file *ast.File,
 	// Store state for this frame
 	r.stateBuffer = stateText
 	r.bindings = bindings
+	r.components = file.Components
 
 	// Find and render the Window node
 	for _, node := range file.Nodes {
@@ -62,6 +64,12 @@ func (r *Renderer) Render(ops *op.Ops, gtx layout.Context, file *ast.File,
 
 // renderNode recursively renders a node and its children.
 func (r *Renderer) renderNode(gtx layout.Context, node *ast.Node) layout.Dimensions {
+	// Check if this is a component reference
+	if comp, ok := r.components[node.Type]; ok {
+		// Render the component definition with the component's properties/children merged
+		return r.renderNode(gtx, comp)
+	}
+
 	switch node.Type {
 	case "Window":
 		return r.renderWindow(gtx, node)

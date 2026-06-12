@@ -1,4 +1,4 @@
-include "button.easy"
+@import "button.easy"
 
 Window {
     title: "Egg Timer"
@@ -14,33 +14,21 @@ Window {
                 Text {
                     text: "Increment Controls"
                 }
-                Button {
-                    id: incBtn
-                    text: "Increment"
-                    onClick: Counter.Increment
-                }
+                IncButton {}
             }
 
             VBox {
                 Text {
                     text: "Decrement Controls"
                 }
-                Button {
-                    id: decBtn
-                    text: "Decrement"
-                    onClick: Counter.Decrement
-                }
+                DecButton {}
             }
 
             VBox {
                 Text {
                     text: "Other Controls"
                 }
-                Button {
-                    id: extraBtn
-                    text: "Extra Button"
-                    onClick: Counter.OnButtonClick
-                }
+                CustomButton {}
             }
         }
     }
