@@ -260,6 +260,26 @@ func GetColor(s string) color.NRGBA {
 		return color.NRGBA{G: 255, A: 255}
 	case "blue":
 		return color.NRGBA{B: 255, A: 255}
+	case "white":
+		return color.NRGBA{R: 255, G: 255, B: 255, A: 255}
+	case "black":
+		return color.NRGBA{R: 0, G: 0, B: 0, A: 255}
+	case "yellow":
+		return color.NRGBA{R: 255, G: 255, B: 0, A: 255}
+	case "cyan":
+		return color.NRGBA{R: 0, G: 255, B: 255, A: 255}
+	case "magenta":
+		return color.NRGBA{R: 255, G: 0, B: 255, A: 255}
+	case "orange":
+		return color.NRGBA{R: 255, G: 165, B: 0, A: 255}
+	case "purple":
+		return color.NRGBA{R: 128, G: 0, B: 128, A: 255}
+	case "gray", "grey":
+		return color.NRGBA{R: 128, G: 128, B: 128, A: 255}
+	case "lightgray", "lightgrey":
+		return color.NRGBA{R: 200, G: 200, B: 200, A: 255}
+	case "darkgray", "darkgrey":
+		return color.NRGBA{R: 64, G: 64, B: 64, A: 255}
 	default:
 		return color.NRGBA{R: 200, G: 200, B: 200, A: 255}
 	}
