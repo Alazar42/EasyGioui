@@ -3,7 +3,7 @@
 Window {
     VBox {
         style: {
-            bgColor: "darkgray"
+            bgColor: "black"
         }
         spacing: "8"
         Text {
@@ -20,7 +20,7 @@ Window {
             style: {
                 size: "28"
                 textColor: "white"
-                bgColor: "black"
+                bgColor: "darkgray"
             }
         }
         HBox {
@@ -28,9 +28,6 @@ Window {
             spacing: "4"
             VBox {
                 weight: "3"
-                style: {
-                    bgColor: "gray"
-                }
                 spacing: "4"
                 HBox {
                     weight: "1"
@@ -58,50 +55,17 @@ Window {
                     spacing: "4"
                     BtnDecimal { weight: "1" }
                     Btn0 { weight: "1" }
-                    BtnClear {
-                        weight: "1"
-                        style: {
-                            bgColor: "red"
-                        }
-                    }
+                    BtnClear { weight: "1" }
                 }
             }
             VBox {
                 weight: "1"
-                style: {
-                    bgColor: "orange"
-                }
                 spacing: "4"
-                BtnDiv {
-                    weight: "1"
-                    style: {
-                        bgColor: "orange"
-                    }
-                }
-                BtnMul {
-                    weight: "1"
-                    style: {
-                        bgColor: "orange"
-                    }
-                }
-                BtnSub {
-                    weight: "1"
-                    style: {
-                        bgColor: "orange"
-                    }
-                }
-                BtnAdd {
-                    weight: "1"
-                    style: {
-                        bgColor: "orange"
-                    }
-                }
-                BtnEqual {
-                    weight: "1"
-                    style: {
-                        bgColor: "green"
-                    }
-                }
+                BtnDiv { weight: "1" }
+                BtnMul { weight: "1" }
+                BtnSub { weight: "1" }
+                BtnAdd { weight: "1" }
+                BtnEqual { weight: "1" }
             }
         }
     }
