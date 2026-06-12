@@ -1,5 +1,5 @@
 Button {
-    id: btn
-    text: "Click Me"
+    id: buttonId
+    text: "Button Text"
     onClick: Counter.OnButtonClick
 }

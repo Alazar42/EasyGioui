@@ -2,14 +2,17 @@ package parser
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"strconv"
 
 	"easygioui/internal/ast"
 )
 
 type Parser struct {
-	lx  *lexer
-	cur token
+	lx      *lexer
+	cur     token
+	baseDir string
 }
 
 func Parse(src string) (*ast.File, error) {
@@ -19,6 +22,52 @@ func Parse(src string) (*ast.File, error) {
 	}
 	file := &ast.File{}
 	for p.cur.kind != tokEOF {
+		n, err := p.parseNode()
+		if err != nil {
+			return nil, err
+		}
+		file.Nodes = append(file.Nodes, n)
+	}
+	return file, nil
+}
+
+// ParseWithDir parses a source string and resolves relative @include directives from baseDir.
+func ParseWithDir(src string, baseDir string) (*ast.File, error) {
+	p := &Parser{lx: newLexer(src), baseDir: baseDir}
+	if err := p.bump(); err != nil {
+		return nil, err
+	}
+	file := &ast.File{}
+	for p.cur.kind != tokEOF {
+		// Check for include directive (include "filename")
+		if p.cur.lit == "include" && p.cur.kind == tokIdent {
+			if err := p.bump(); err != nil { // consume "include"
+				return nil, err
+			}
+			if p.cur.kind != tokString {
+				return nil, fmt.Errorf("expected string after include at %d", p.cur.pos)
+			}
+			includePath := p.cur.lit
+			if err := p.bump(); err != nil {
+				return nil, err
+			}
+
+			// Load the included file
+			fullPath := filepath.Join(baseDir, includePath)
+			data, err := os.ReadFile(fullPath)
+			if err != nil {
+				return nil, fmt.Errorf("failed to read include %q: %w", includePath, err)
+			}
+
+			// Parse included file recursively
+			incFile, err := ParseWithDir(string(data), filepath.Dir(fullPath))
+			if err != nil {
+				return nil, fmt.Errorf("failed to parse include %q: %w", includePath, err)
+			}
+			file.Nodes = append(file.Nodes, incFile.Nodes...)
+			continue
+		}
+
 		n, err := p.parseNode()
 		if err != nil {
 			return nil, err

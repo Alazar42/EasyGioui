@@ -5,6 +5,7 @@ package easygioui
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"easygioui/internal/ast"
 	"easygioui/internal/parser"
@@ -31,7 +32,9 @@ func Load(path string) *UI {
 		return nil
 	}
 
-	file, err := parser.Parse(string(data))
+	// Parse with directory support for includes
+	dir := filepath.Dir(path)
+	file, err := parser.ParseWithDir(string(data), dir)
 	if err != nil {
 		fmt.Printf("easygioui: failed to parse %q: %v\n", path, err)
 		return nil
