@@ -104,6 +104,14 @@ func (r *Renderer) renderWindow(gtx layout.Context, node *ast.Node) layout.Dimen
 
 // renderVBox renders a vertical box layout.
 func (r *Renderer) renderVBox(gtx layout.Context, node *ast.Node) layout.Dimensions {
+	// Draw background first if specified
+	if bgColor, ok := node.Styles["bgColor"]; ok {
+		c := GetColor(bgColor.Raw)
+		// Draw background at max constraints
+		shp := clip.Rect{Max: gtx.Constraints.Max}
+		paint.FillShape(gtx.Ops, c, shp.Op())
+	}
+
 	// Create FlexChild items for each child
 	children := make([]layout.FlexChild, len(node.Children))
 	for i, child := range node.Children {
@@ -114,20 +122,19 @@ func (r *Renderer) renderVBox(gtx layout.Context, node *ast.Node) layout.Dimensi
 	}
 
 	flex := layout.Flex{Axis: layout.Vertical}
-	dims := flex.Layout(gtx, children...)
-
-	// Apply background color if specified
-	if bgColor, ok := node.Styles["bgColor"]; ok {
-		c := GetColor(bgColor.Raw)
-		shp := clip.Rect{Max: dims.Size}
-		paint.FillShape(gtx.Ops, c, shp.Op())
-	}
-
-	return dims
+	return flex.Layout(gtx, children...)
 }
 
 // renderHBox renders a horizontal box layout.
 func (r *Renderer) renderHBox(gtx layout.Context, node *ast.Node) layout.Dimensions {
+	// Draw background first if specified
+	if bgColor, ok := node.Styles["bgColor"]; ok {
+		c := GetColor(bgColor.Raw)
+		// Draw background at max constraints
+		shp := clip.Rect{Max: gtx.Constraints.Max}
+		paint.FillShape(gtx.Ops, c, shp.Op())
+	}
+
 	// Create FlexChild items for each child
 	children := make([]layout.FlexChild, len(node.Children))
 	for i, child := range node.Children {
@@ -138,16 +145,7 @@ func (r *Renderer) renderHBox(gtx layout.Context, node *ast.Node) layout.Dimensi
 	}
 
 	flex := layout.Flex{Axis: layout.Horizontal}
-	dims := flex.Layout(gtx, children...)
-
-	// Apply background color if specified
-	if bgColor, ok := node.Styles["bgColor"]; ok {
-		c := GetColor(bgColor.Raw)
-		shp := clip.Rect{Max: dims.Size}
-		paint.FillShape(gtx.Ops, c, shp.Op())
-	}
-
-	return dims
+	return flex.Layout(gtx, children...)
 }
 
 // renderText renders a text label.
