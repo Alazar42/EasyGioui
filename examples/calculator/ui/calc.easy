@@ -6,8 +6,8 @@ Window {
             id: display
             text: "0"
             style: {
-                size: 24
-                textColor: white
+                size: "24"
+                textColor: "white"
             }
         }
         HBox {
@@ -32,7 +32,7 @@ Window {
                     Btn0 {}
                     BtnClear {
                         style: {
-                            textColor: red
+                            textColor: "red"
                         }
                     }
                 }
@@ -44,7 +44,7 @@ Window {
                 BtnAdd {}
                 BtnEqual {
                     style: {
-                        textColor: green
+                        textColor: "green"
                     }
                 }
             }

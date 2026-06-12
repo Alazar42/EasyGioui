@@ -8,8 +8,8 @@ Window {
             id: counterText
             text: "Counter: 0"
             style: {
-                size: 20
-                textColor: blue
+                size: "20"
+                textColor: "blue"
             }
         }
 
@@ -18,7 +18,7 @@ Window {
                 Text {
                     text: "Increment Controls"
                     style: {
-                        textColor: green
+                        textColor: "green"
                     }
                 }
                 IncButton {}
@@ -28,7 +28,7 @@ Window {
                 Text {
                     text: "Decrement Controls"
                     style: {
-                        textColor: red
+                        textColor: "red"
                     }
                 }
                 DecButton {}
@@ -38,7 +38,7 @@ Window {
                 Text {
                     text: "Other Controls"
                     style: {
-                        textColor: yellow
+                        textColor: "yellow"
                     }
                 }
                 CustomButton {}
