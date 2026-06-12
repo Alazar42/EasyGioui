@@ -267,40 +267,72 @@ func (r *Renderer) renderText(gtx layout.Context, node *ast.Node) layout.Dimensi
 		paint.FillShape(gtx.Ops, c, shp.Op())
 	}
 
-	// Get horizontal alignment (default: start/left)
-	hAlignDir := layout.Middle
-	if hAlignStr, ok := node.Styles["hAlign"]; ok {
-		switch strings.ToLower(hAlignStr.Raw) {
-		case "center":
-			hAlignDir = layout.Middle
-		case "end", "right":
-			hAlignDir = layout.End
-		case "start", "left":
-			hAlignDir = layout.Start
-		}
+	// Get horizontal alignment
+	hAlignStr := "left"
+	if hAlignVal, ok := node.Styles["hAlign"]; ok {
+		hAlignStr = strings.ToLower(hAlignVal.Raw)
 	}
 
-	// Get vertical alignment (default: start/top)
-	vAlignDir := layout.Start
-	if vAlignStr, ok := node.Styles["vAlign"]; ok {
-		switch strings.ToLower(vAlignStr.Raw) {
-		case "center":
-			vAlignDir = layout.Middle
-		case "end", "bottom":
-			vAlignDir = layout.End
-		case "start", "top":
-			vAlignDir = layout.Start
-		}
+	// Get vertical alignment
+	vAlignStr := "top"
+	if vAlignVal, ok := node.Styles["vAlign"]; ok {
+		vAlignStr = strings.ToLower(vAlignVal.Raw)
 	}
 
-	// Apply alignment using Flex layout
-	return layout.Flex{Axis: layout.Vertical, Alignment: vAlignDir}.Layout(gtx,
-		layout.Flexed(1, func(gtx layout.Context) layout.Dimensions {
-			return layout.Flex{Axis: layout.Horizontal, Alignment: hAlignDir}.Layout(gtx,
-				layout.Flexed(1, func(gtx layout.Context) layout.Dimensions {
+	// Apply vertical alignment first (outer flex)
+	return layout.Flex{Axis: layout.Vertical}.Layout(gtx,
+		// Top spacer when bottom-aligned
+		layout.Flexed(func() float32 {
+			if vAlignStr == "bottom" || vAlignStr == "end" {
+				return 1
+			} else if vAlignStr == "center" {
+				return 0.5
+			}
+			return 0
+		}(), func(gtx layout.Context) layout.Dimensions {
+			return layout.Dimensions{Size: gtx.Constraints.Max}
+		}),
+		// Text row with horizontal alignment
+		layout.Rigid(func(gtx layout.Context) layout.Dimensions {
+			return layout.Flex{Axis: layout.Horizontal}.Layout(gtx,
+				// Left spacer when right-aligned
+				layout.Flexed(func() float32 {
+					if hAlignStr == "right" || hAlignStr == "end" {
+						return 1
+					} else if hAlignStr == "center" {
+						return 0.5
+					}
+					return 0
+				}(), func(gtx layout.Context) layout.Dimensions {
+					return layout.Dimensions{Size: gtx.Constraints.Max}
+				}),
+				// The label itself
+				layout.Rigid(func(gtx layout.Context) layout.Dimensions {
 					return label.Layout(gtx)
 				}),
+				// Right spacer when left-aligned or center
+				layout.Flexed(func() float32 {
+					if hAlignStr == "center" {
+						return 0.5
+					} else if hAlignStr != "right" && hAlignStr != "end" {
+						return 1
+					}
+					return 0
+				}(), func(gtx layout.Context) layout.Dimensions {
+					return layout.Dimensions{Size: gtx.Constraints.Max}
+				}),
 			)
+		}),
+		// Bottom spacer when top-aligned
+		layout.Flexed(func() float32 {
+			if vAlignStr == "top" || vAlignStr == "start" {
+				return 1
+			} else if vAlignStr == "center" {
+				return 0.5
+			}
+			return 0
+		}(), func(gtx layout.Context) layout.Dimensions {
+			return layout.Dimensions{Size: gtx.Constraints.Max}
 		}),
 	)
 }
